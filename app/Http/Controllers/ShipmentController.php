@@ -14,7 +14,7 @@ class ShipmentController extends Controller
     }
 
     public function show($id){
-        $shipment=Shipment::where('id',$id)->first();
+        $shipment=Shipment::findOrFail($id);;
         return view("shipments.show",["shipment"=>$shipment]);
     }
 
@@ -53,7 +53,7 @@ class ShipmentController extends Controller
         }
     }
     public function setStatus($id,$status){
-        $shipment=Shipment::where('id',$id)->first();
+        $shipment=Shipment::findOrFail($id);
        if ($status!='Done'){
            $shipment->status=$status;
            $shipment->save();
@@ -65,22 +65,22 @@ class ShipmentController extends Controller
         return $shipment;
     }
     public function createEntities($shipment){
-        $entity=new JournalEntities();
-        $entity->amount=(100*$shipment->price)/100;
-        $entity->type='Debit Cash';
-        $entity->shipment=$shipment->id;
-        $entity->save();
+        $debitCash=new JournalEntities();
+        $debitCash->amount=(100*$shipment->price)/100;
+        $debitCash->type='Debit Cash';
+        $debitCash->shipment=$shipment->id;
+        $debitCash->save();
 
-        $entity=new JournalEntities();
-        $entity->amount=(20*$shipment->price)/100;
-        $entity->type='Credit Revenue';
-        $entity->shipment=$shipment->id;
-        $entity->save();
+        $creditRevenue=new JournalEntities();
+        $creditRevenue->amount=(20*$shipment->price)/100;
+        $creditRevenue->type='Credit Revenue';
+        $creditRevenue->shipment=$shipment->id;
+        $creditRevenue->save();
 
-        $entity=new JournalEntities();
-        $entity->amount=(80*$shipment->price)/100;
-        $entity->type='Credit Payable';
-        $entity->shipment=$shipment->id;
-        $entity->save();
+        $creditPayable=new JournalEntities();
+        $creditPayable->amount=(80*$shipment->price)/100;
+        $creditPayable->type='Credit Payable';
+        $creditPayable->shipment=$shipment->id;
+        $creditPayable->save();
     }
 }
