@@ -27,7 +27,7 @@ class ShipmentRequest extends FormRequest
             'code' => 'required|string',
             'shipper' => 'required|string',
             'weight' => 'required',
-            'description' => 'required|string',
+            'description' => 'string',
             'price' => 'required',
             'status' => 'required|in:Pending,Progress,Done',
             'updated_by' => 'required|string',

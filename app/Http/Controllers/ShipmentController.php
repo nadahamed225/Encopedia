@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
 use App\Models\Shipment;
 use App\Models\JournalEntities;
 use App\Http\Requests\ShipmentRequest;
@@ -24,32 +22,15 @@ class ShipmentController extends Controller
         return view("shipments.create");
     }
 
-//    public function store(ShipmentRequest $shipmentRequest){
-//        $validatedData=$shipmentRequest->request;
-//        if($shipmentRequest->hasFile("image"))
-//        {
-//            $image = $shipmentRequest->file("image");
-//            $image_name = "images/shipments/".time().'.'.$image->extension();
-//            $image->move(public_path("images/shipments"), $image_name);
-//            $validatedData->image=$image;
-//        }
-//        $shipment=Shipment::create($validatedData->all());
-//        if($shipment->status=='Done') {
-//            $this->createEntities($shipment);
-//        }
-//        $shipments = Shipment::all();
-//        return view("shipments.index",['shipments' => $shipments]);
-//    }
-
     public function store(ShipmentRequest $shipmentRequest)
     {
-        $validatedData = $shipmentRequest->validated(); // Use validated() method to get validated data
+        $validatedData = $shipmentRequest->validated();
 
         if ($shipmentRequest->hasFile("image")) {
             $image = $shipmentRequest->file("image");
             $image_name = time() . '.' . $image->extension();
             $image->move(public_path("images/shipments"), $image_name);
-            $validatedData['image'] = $image_name; // Save the image path to the database
+            $validatedData['image'] = $image_name;
         }
 
         $shipment = Shipment::create($validatedData);
