@@ -24,21 +24,42 @@ class ShipmentController extends Controller
         return view("shipments.create");
     }
 
-    public function store(ShipmentRequest $shipmentRequest){
-        $validatedData=$shipmentRequest->request;
-        if($shipmentRequest->hasFile("image"))
-        {
+//    public function store(ShipmentRequest $shipmentRequest){
+//        $validatedData=$shipmentRequest->request;
+//        if($shipmentRequest->hasFile("image"))
+//        {
+//            $image = $shipmentRequest->file("image");
+//            $image_name = "images/shipments/".time().'.'.$image->extension();
+//            $image->move(public_path("images/shipments"), $image_name);
+//            $validatedData->image=$image;
+//        }
+//        $shipment=Shipment::create($validatedData->all());
+//        if($shipment->status=='Done') {
+//            $this->createEntities($shipment);
+//        }
+//        $shipments = Shipment::all();
+//        return view("shipments.index",['shipments' => $shipments]);
+//    }
+
+    public function store(ShipmentRequest $shipmentRequest)
+    {
+        $validatedData = $shipmentRequest->validated(); // Use validated() method to get validated data
+
+        if ($shipmentRequest->hasFile("image")) {
             $image = $shipmentRequest->file("image");
-            $image_name = "images/shipments/".time().'.'.$image->extension();
+            $image_name = time() . '.' . $image->extension();
             $image->move(public_path("images/shipments"), $image_name);
-            $validatedData->image=$image;
+            $validatedData['image'] = $image_name; // Save the image path to the database
         }
-        $shipment=Shipment::create($validatedData->all());
-        if($shipment->status=='Done') {
+
+        $shipment = Shipment::create($validatedData);
+
+        if ($shipment->status == 'Done') {
             $this->createEntities($shipment);
         }
+
         $shipments = Shipment::all();
-        return view("shipments.index",['shipments' => $shipments]);
+        return view("shipments.index", ['shipments' => $shipments]);
     }
 
     public function getPrice($weight){

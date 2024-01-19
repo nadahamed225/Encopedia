@@ -1,7 +1,9 @@
-@extends('welcome')
+@extends('layouts.app')
 
 @section('content')
-    <a href="{{route("shipments.create")}}" class="btn btn-info">Add Shipment</a>
+    <div class="text-end me-5">
+    <a href="{{route("shipments.create")}}" class="btn btn-info" >Add Shipment</a>
+    </div>
     <table class="table table-striped w-50 m-auto table-bordered text-center mt-5">
         <thead>
         <tr>

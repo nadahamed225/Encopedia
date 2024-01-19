@@ -1,14 +1,15 @@
-@extends('welcome')
+@extends('layouts.app')
 @section('content')
+{{--    @dd($shipment);--}}
     <div class="container">
-        <div class="card" style="width: 18rem;">
-            <img src="{{asset('images/shipments/'.$shipment->image)}}" class="card-img-top" >
+        <div class="card mx-auto" style="width: 20rem;">
+            <img class="w-50 h-50 m-auto mt-2" src="{{asset('images/shipments/'.$shipment->image)}}" class="card-img-top" >
             <div class="card-body">
-                <h5 class="card-title">{{$shipment->code}} Info</h5>
-                <p class="card-text">{{$shipment->shipper}}</p>
-                <p class="card-text">{{$shipment->weight}}</p>
-                <p class="card-text">{{$shipment->description}}</p>
-                <p class="card-text">{{$shipment->price}}</p>
+                <h5 class="card-title"><b>Code:</b> {{$shipment->code}}</h5>
+                <p class="card-text"><b>Shipper:</b> {{$shipment->shipper}}</p>
+                <p class="card-text"><b>Weight:</b> {{$shipment->weight}}</p>
+                <p class="card-text"><b>Description:</b> {{$shipment->description}}</p>
+                <p class="card-text"><b>Price:</b> {{$shipment->price}}</p>
                 <select class="form-select" name="status" onchange="setStatus()" id="status" >
                     <option hidden {{ $shipment->status == 'Done' ? 'selected' : '' }}>{{ $shipment->status }}</option>
                     <option value="Pending" {{ $shipment->status == 'Done' ? 'disabled' : '' }}>Pending</option>
@@ -16,10 +17,9 @@
                     <option value="Done" {{ $shipment->status == 'Done' ? 'disabled' : '' }} >Done</option>
                 </select>
                 <p class="card-text"></p>
-                <p class="card-text">{{$shipment->updated_by}}</p>
-                <p class="card-text">{{$shipment->created_at}}</p>
-                <p class="card-text">{{$shipment->updated_at}}</p>
-                <a href="{{route("shipments.index")}}" class="btn btn-primary">Back To All Shipments</a>
+                <p class="card-text"><b>Updated By:</b> {{$shipment->updated_by}}</p>
+                <p class="card-text"><b>Created At:</b> {{$shipment->created_at}}</p>
+                <p class="card-text"><b>Updated At:</b> {{$shipment->updated_at}}</p>
             </div>
         </div>
     </div>

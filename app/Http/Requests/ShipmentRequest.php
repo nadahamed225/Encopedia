@@ -31,7 +31,7 @@ class ShipmentRequest extends FormRequest
             'price' => 'required',
             'status' => 'required|in:Pending,Progress,Done',
             'updated_by' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg',
+            'image' => 'required',
         ];
 
     }
