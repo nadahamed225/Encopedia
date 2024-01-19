@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ShipmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::resource('shipments',ShipmentController::class);
+Route::get('shimpents/getprice/{weight}', [ShipmentController::class,"getPrice"]);
+Route::get('shimpents/setStatus/{id}', [ShipmentController::class,"setStatus"]);
+
