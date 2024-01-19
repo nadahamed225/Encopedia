@@ -71,11 +71,16 @@ class ShipmentController extends Controller
             return 300;
         }
     }
-    public function setStatus($id){
+    public function setStatus($id,$status){
         $shipment=Shipment::where('id',$id)->first();
-        $shipment->status='Done';
-        $shipment->save();
-        $this->createEntities($shipment);
+       if ($status!='Done'){
+           $shipment->status=$status;
+           $shipment->save();
+       }else {
+           $shipment->status = 'Done';
+           $shipment->save();
+           $this->createEntities($shipment);
+       }
         return $shipment;
     }
     public function createEntities($shipment){

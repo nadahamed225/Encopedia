@@ -20,5 +20,5 @@ Route::get('/', function () {
 
 Route::resource('shipments',ShipmentController::class);
 Route::get('shimpents/getprice/{weight}', [ShipmentController::class,"getPrice"]);
-Route::get('shimpents/setStatus/{id}', [ShipmentController::class,"setStatus"]);
+Route::get('shimpents/setStatus/{id}/{status}', [ShipmentController::class,"setStatus"]);
 
