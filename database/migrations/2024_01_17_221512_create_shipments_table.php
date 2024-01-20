@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('shipper');
             $table->string('image')->nullable();
             $table->decimal('weight')->default(0.0);
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->unsignedInteger('price')->default(0);
             $table->enum('status',['Pending','Progress','Done'])->default('Pending');
             $table->string('updated_by');

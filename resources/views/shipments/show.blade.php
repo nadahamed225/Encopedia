@@ -27,11 +27,11 @@
     function setStatus() {
         const status = document.getElementById('status').value;
         const id= {{$shipment->id}};
-        fetch(`/shimpents/setStatus/${id}/${status}`)
-            .then(response => response.json())
-            .then(data => {
-                location.reload();
-            })
-            .catch(error => console.error('Error:', error));
+            fetch(`/shimpents/setStatus/${id}/${status}`)
+                .then(response => response.json())
+                .then(data => {
+                    location.reload();
+                })
+                .catch(error => console.error('Error:', error));
     }
 </script>
