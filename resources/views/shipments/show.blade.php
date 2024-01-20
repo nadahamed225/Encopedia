@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-{{--    @dd($shipment);--}}
     <div class="container">
         <div class="card mx-auto" style="width: 20rem;">
             <img class="w-50 h-50 m-auto mt-2" src="{{asset('images/shipments/'.$shipment->image)}}" class="card-img-top" >
@@ -28,13 +27,11 @@
     function setStatus() {
         const status = document.getElementById('status').value;
         const id= {{$shipment->id}};
-        if (status == 'Done') {
-            fetch(`/shimpents/setStatus/${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    location.reload();
-                })
-                .catch(error => console.error('Error:', error));
-        }
+        fetch(`/shimpents/setStatus/${id}/${status}`)
+            .then(response => response.json())
+            .then(data => {
+                location.reload();
+            })
+            .catch(error => console.error('Error:', error));
     }
 </script>

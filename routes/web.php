@@ -14,11 +14,19 @@ use App\Http\Controllers\ShipmentController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+//Route::get('/', function () {
+//    return view('welcome');
+//});
+//Route::get('/shimpents',[ShipmentController::class,"index"]);
+
+Route::get('/',[ShipmentController::class,"index"]);
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::resource('shipments',ShipmentController::class)->except(['index']);
+    Route::get('shimpents/getprice/{weight}', [ShipmentController::class,"getPrice"]);
+    Route::get('shimpents/setStatus/{id}/{status}', [ShipmentController::class,"setStatus"]);
 });
 
-Route::resource('shipments',ShipmentController::class);
-Route::get('shimpents/getprice/{weight}', [ShipmentController::class,"getPrice"]);
-Route::get('shimpents/setStatus/{id}', [ShipmentController::class,"setStatus"]);
+Auth::routes();
 
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

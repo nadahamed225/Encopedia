@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
 use App\Models\Shipment;
 use App\Models\JournalEntities;
 use App\Http\Requests\ShipmentRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ShipmentController extends Controller
 {
@@ -16,7 +15,7 @@ class ShipmentController extends Controller
     }
 
     public function show($id){
-        $shipment=Shipment::where('id',$id)->first();
+        $shipment=Shipment::findOrFail($id);;
         return view("shipments.show",["shipment"=>$shipment]);
     }
 
@@ -24,32 +23,15 @@ class ShipmentController extends Controller
         return view("shipments.create");
     }
 
-//    public function store(ShipmentRequest $shipmentRequest){
-//        $validatedData=$shipmentRequest->request;
-//        if($shipmentRequest->hasFile("image"))
-//        {
-//            $image = $shipmentRequest->file("image");
-//            $image_name = "images/shipments/".time().'.'.$image->extension();
-//            $image->move(public_path("images/shipments"), $image_name);
-//            $validatedData->image=$image;
-//        }
-//        $shipment=Shipment::create($validatedData->all());
-//        if($shipment->status=='Done') {
-//            $this->createEntities($shipment);
-//        }
-//        $shipments = Shipment::all();
-//        return view("shipments.index",['shipments' => $shipments]);
-//    }
-
     public function store(ShipmentRequest $shipmentRequest)
     {
-        $validatedData = $shipmentRequest->validated(); // Use validated() method to get validated data
+        $validatedData = $shipmentRequest->validated();
 
         if ($shipmentRequest->hasFile("image")) {
             $image = $shipmentRequest->file("image");
             $image_name = time() . '.' . $image->extension();
             $image->move(public_path("images/shipments"), $image_name);
-            $validatedData['image'] = $image_name; // Save the image path to the database
+            $validatedData['image'] = $image_name;
         }
 
         $shipment = Shipment::create($validatedData);
@@ -71,30 +53,37 @@ class ShipmentController extends Controller
             return 300;
         }
     }
-    public function setStatus($id){
-        $shipment=Shipment::where('id',$id)->first();
-        $shipment->status='Done';
-        $shipment->save();
-        $this->createEntities($shipment);
+    public function setStatus($id,$status){
+        $shipment=Shipment::findOrFail($id);
+        $user = Auth::user();
+        $shipment->updated_by=$user->name;
+        if ($status!='Done'){
+            $shipment->status=$status;
+            $shipment->save();
+        }else {
+            $shipment->status = 'Done';
+            $shipment->save();
+            $this->createEntities($shipment);
+        }
         return $shipment;
     }
     public function createEntities($shipment){
-        $entity=new JournalEntities();
-        $entity->amount=(100*$shipment->price)/100;
-        $entity->type='Debit Cash';
-        $entity->shipment=$shipment->id;
-        $entity->save();
+        $debitCash=new JournalEntities();
+        $debitCash->amount=(100*$shipment->price)/100;
+        $debitCash->type='Debit Cash';
+        $debitCash->shipment=$shipment->id;
+        $debitCash->save();
 
-        $entity=new JournalEntities();
-        $entity->amount=(20*$shipment->price)/100;
-        $entity->type='Credit Revenue';
-        $entity->shipment=$shipment->id;
-        $entity->save();
+        $creditRevenue=new JournalEntities();
+        $creditRevenue->amount=(20*$shipment->price)/100;
+        $creditRevenue->type='Credit Revenue';
+        $creditRevenue->shipment=$shipment->id;
+        $creditRevenue->save();
 
-        $entity=new JournalEntities();
-        $entity->amount=(80*$shipment->price)/100;
-        $entity->type='Credit Payable';
-        $entity->shipment=$shipment->id;
-        $entity->save();
+        $creditPayable=new JournalEntities();
+        $creditPayable->amount=(80*$shipment->price)/100;
+        $creditPayable->type='Credit Payable';
+        $creditPayable->shipment=$shipment->id;
+        $creditPayable->save();
     }
 }
